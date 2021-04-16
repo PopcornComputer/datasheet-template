@@ -1,8 +1,10 @@
-%% LaTeX document class for formatting electronics datasheets.
+%% LaTeX document class for formatting Solder Party datasheets.
 %%
+%% Copyright 2021 arturo182
 %% Copyright 2020 Petteri Aimonen
 %%
-%% https://github.com/PetteriAimonen/latex-datasheet-template/
+%% fork: https://github.com/solderparty/datasheet-template/
+%% original: https://github.com/PetteriAimonen/latex-datasheet-template/
 %%
 %% --------------------------------------------------------------------------
 %% 
@@ -16,99 +18,141 @@
 %% 
 %% This work has the LPPL maintenance status "maintained".
 %% 
-%% This Current Maintainer of this work is Petteri Aimonen.
+%% This Current Maintainer of this work is arturo182.
 %% 
 %% This work consists of the file datasheet.cls and the example
 %% document example.tex.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{datasheet}[2020/11/13 LaTeX document class for datasheets]
+\ProvidesClass{datasheet}[2021/04/17 LaTeX document class for Solder Party datasheets]
 
-% The class is based on the twocolumn article class.
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
-\LoadClass[twocolumn]{article}
+\LoadClass{article}
 
 % Useful symbol and color definitions
 \RequirePackage{gensymb}
 \RequirePackage{xcolor}
+\RequirePackage{tikz}
 
 % These packages allow full-width tables and combining cells in tables.
 \RequirePackage{multirow}
 \RequirePackage{multicol}
 \RequirePackage{tabularx}
 \RequirePackage{threeparttable}
+\RequirePackage{lmodern}
+
+% Nice and modern Font
+\RequirePackage{fontspec}
+\setmainfont{Open Sans}
+
+\RequirePackage{fancyhdr}
 
 % Align figure and table captions to left.
 \RequirePackage[font=bf, skip=5pt, justification=raggedright, format=hang, singlelinecheck=off]{caption}
 
+\definecolor{silver}{HTML}{FAF8FD}
+\definecolor{border}{HTML}{DEE2E6}
+\definecolor{spviolet}{HTML}{6124c2}
+\definecolor{urlcolor}{HTML}{8953df}
+
 % Format hyperlinks as blue and set PDF title based on \title{} in the document.
 \RequirePackage[pdfusetitle]{hyperref}
 \hypersetup{
-    pdftex,
-    breaklinks=true,
-    colorlinks=true,
-    linkcolor=.,
-    urlcolor=blue
+	pdftex,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=.,
+	urlcolor=urlcolor
 }
 
 % Configure page margins
-\RequirePackage{geometry}
-\geometry{left=2cm, top=2cm, right=2cm, bottom=3cm}
+\RequirePackage[includehead,includefoot]{geometry}
+\geometry{top=2cm, bottom=2cm, left=2cm,  right=2cm}
 
-% Command \companylogo{} can be used in document to specify a logo for the first page.
-\gdef\@companylogo{}
-\newcommand{\companylogo}[1]{\gdef\@companylogo{#1}}
+% Datasheet version
+\gdef\@version{}
+\newcommand{\version}[1]{\gdef\@version{v#1}}
 
-% Command \revision{} can be used to include a document revision number in footer.
-\gdef\@revision{}
-\newcommand{\revision}[1]{\gdef\@revision{#1}}
+% Our website
+\gdef\@website{}
+\newcommand{\website}[1]{\gdef\@website{#1}}
 
-% First page title layout is defined here
+% Title page is defined here
 \renewcommand{\maketitle}{%
-    \twocolumn[%
-        {\@companylogo}\\
-        \vspace{1cm}\\
-        {\Huge\sffamily\bfseries\@title}\\
-        \noindent\rule{\textwidth}{1pt}
-        \medskip
-        ]%
-        \pagestyle{normalpage}
-        \thispagestyle{firstpage}
+	\begin{tikzpicture}[remember picture,overlay]
+		\node (titlebg) [
+			shape=rectangle, 
+			draw=border, 
+			fill=silver, 
+			line width=0.5mm, 
+			minimum height=40mm, 
+			minimum width=200mm, 
+			anchor=east, 
+			xshift=2mm, 
+			yshift=6cm
+		] at (current page.east) {};
+
+		\node [
+			anchor=east,
+			xshift=-4.5mm
+		] at (titlebg.east) {
+			\begin{tabular}{r}
+				\fontsize{50pt}{50pt}\selectfont\textbf{\@title} \\
+				\fontsize{40pt}{40pt}\selectfont\color{gray}{Datasheet}
+			\end{tabular}
+		};
+
+		\node (sidebar) [
+			anchor=north west, 
+			shape=rectangle,
+			fill=spviolet, 
+			minimum height=290mm, 
+			minimum width=40mm
+		] at (current page.north west) {};
+
+		\node [
+			anchor=south east, 
+			font=\fontsize{16pt}{16pt}\selectfont, 
+			xshift=-3mm, 
+			yshift=3mm
+		] at (current page.south east) {
+			\begin{tabular}{r}
+				\textbf{Solder Party AB}\\
+				\href{www.solder.party}{\color{black}{www.solder.party}}
+			\end{tabular}
+		};
+
+		\node [
+			anchor=south west, 
+			font=\fontsize{16pt}{16pt}\selectfont, 
+			yshift=15.5mm, 
+			xshift=3mm
+		] at (sidebar.south east) {
+			Version 1.0
+		};
+	\end{tikzpicture}
 }
 
-% First page has footer but no header
-\RequirePackage{fancyhdr}
-\RequirePackage{lastpage}
-\fancypagestyle{firstpage}{
-    \fancyhf{}
-    \renewcommand{\headrulewidth}{0pt}
-    \renewcommand{\footrulewidth}{0.5pt}
-    \fancyfoot[L]{\@revision}
-    \fancyfoot[C]{\@date}
-    \fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
-}
+% Color the header and footer rules
+\futurelet\TMPfootrule\def\footrule{{\color{spviolet}\TMPfootrule}}
+\futurelet\TMPheadrule\def\headrule{{\color{spviolet}\TMPheadrule}}
 
-% Rest of the pages have both header and footer
+% Make sure \sectionmark updates \markright
+\renewcommand{\sectionmark}[1]{\markright{\thesection~- ~#1}}
+
+% Normal pages have both header and footer
 \fancypagestyle{normalpage}{
-    \renewcommand{\headrulewidth}{0.5pt}
-    \renewcommand{\footrulewidth}{0.5pt}
-    \fancyhead[L]{\@author}
-    \fancyhead[C]{\slshape\@title}
-    \fancyhead[R]{\@date}
-    \fancyfoot[L]{\@revision}
-    \fancyfoot[C]{\@date}
-    \fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
-}
+	\renewcommand{\headrulewidth}{5pt}
+	\renewcommand{\footrulewidth}{5pt}
 
-% No line above footnotes
-\renewcommand\footnoterule{}
+	\fancyhead[L]{\color{spviolet}{\@author\ \@title\ \@version}}
+	\fancyhead[C]{}
+	\fancyhead[R]{}
 
-% Section header size and spacing
-\renewcommand{\section}{%
-    \@startsection
-    {section}{1}{0pt}{-3.5ex plus -2ex minus -1ex}%
-    {2.5ex plus .5ex}{\Large\bfseries\sffamily}%
+	\fancyfoot[L]{\color{spviolet}{\nouppercase{\rightmark}}}
+	\fancyfoot[C]{}
+	\fancyfoot[R]{\color{spviolet}{\thepage}}
 }
 
 % Spacing between paragraphs
@@ -120,6 +164,3 @@
 % are more fitting in the usual data sheet style.
 \renewcommand{\arraystretch}{1.5}
 \newcommand{\thickhline}{\noalign {\ifnum 0=`}\fi \hrule height 1pt \futurelet \reserved@a \@xhline}
-
-% No numbering for section titles
-\setcounter{secnumdepth}{0}
