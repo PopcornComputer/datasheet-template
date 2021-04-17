@@ -16,6 +16,20 @@
 
 \pagestyle{normalpage}
 
+\tableofcontents
+
+\clearpage
+
+\iftotaltables
+	\listoftables
+	\clearpage
+\fi
+
+\iftotalfigures
+	\listoffigures
+	\clearpage
+\fi
+
 \section{Introduction}
 
 \subsection{Features}
@@ -87,6 +101,12 @@
 	cause permanent damage to the device. This is a stress rating only. Functional
 	operation of the device is not implied in any conditions above those indicated
 	in the Electrical Specifications section.
+
+\clearpage
+
+\begin{versionhistory}
+  	\vhEntry{v1.0}{April 2021}{}{First release}
+\end{versionhistory}
 
 \end{document}
 

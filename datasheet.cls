@@ -34,6 +34,8 @@
 \RequirePackage{gensymb}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
+\RequirePackage[tocentry, tablegrid, hideauthorcolumn]{vhistory}
+\RequirePackage[figure,table]{totalcount}
 
 % These packages allow full-width tables and combining cells in tables.
 \RequirePackage{multirow}
