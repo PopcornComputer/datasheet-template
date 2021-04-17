@@ -2,12 +2,14 @@
 
 \usepackage[utf8]{inputenc}
 
-\title{Example Part}
-\author{Solder Party}
-\company{Solder Party AB}
-\date{April 2021}
-\version{1.0}
-\website{www.solder.party}
+\makeatletter
+	\title{Example Part}		\let\Title\@title
+	\author{Solder Party}		\let\Author\@author
+	\company{Solder Party AB}	\let\Company\@company
+	\date{April 2021}			\let\Date\@date
+	\version{1.0}				\let\Version\@version
+	\website{www.solder.party}	\let\Website\@website
+\makeatother
 
 \begin{document}
 
@@ -107,8 +109,20 @@
 
 % Remember to update \version too!
 \begin{versionhistory}
-  	\vhEntry{v1.0}{April 2021}{}{First release}
+  	\vhEntry{\Version}{\Date}{}{First release}
 \end{versionhistory}
+
+\section{Legal notices}
+
+\Company\ believes the information contained herein is correct and accurate at the time of release. 
+\Company\ reserves the right to make corrections, enhancements, and other changes to the product without further notice to improve reliability, function, or design.
+\Company\ reserves the right to make corrections, enhancements, and other changes to this document without further notice.
+\Company\ does not assume any liability arising out of this product, as well as any application or circuits described herein.
+\Company\ does not give any representations or warranties, expressed or implied, as to the accuracy or completeness of such information and shall have no liability for the consequences of use of such information.
+
+The \Company\ name, and the \Author\ logo are trademarks of \Company. All other trademarks mentioned in this document are the property of their respective owners.
+
+\copyright\ \the\year\ \Company. All rights reserved.
 
 \end{document}
 
