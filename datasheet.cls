@@ -76,6 +76,10 @@
 \gdef\@version{}
 \newcommand{\version}[1]{\gdef\@version{v#1}}
 
+% Full company name, used on title page
+\gdef\@company{}
+\newcommand{\company}[1]{\gdef\@company{#1}}
+
 % Our website
 \gdef\@website{}
 \newcommand{\website}[1]{\gdef\@website{#1}}
@@ -113,25 +117,41 @@
 			minimum width=40mm
 		] at (current page.north west) {};
 
-		\node [
+		\node (company) [
 			anchor=south east, 
+			shape=rectangle, 
 			font=\fontsize{16pt}{16pt}\selectfont, 
 			xshift=-3mm, 
 			yshift=3mm
 		] at (current page.south east) {
 			\begin{tabular}{r}
-				\textbf{Solder Party AB}\\
-				\href{www.solder.party}{\color{black}{www.solder.party}}
+				\textbf{\@company}\\
+				\fontsize{14pt}{14pt}\selectfont\href{\@website}{\color{black}{\@website}}
 			\end{tabular}
+		};
+
+		\node (companydiv) [
+			anchor=east, 
+			shape=rectangle, 
+			fill=black, 
+			minimum width=1mm, 
+			minimum height=19.5mm, 
+			inner sep=0.5mm
+		] at (company.west) {};
+
+		\node [
+			anchor=east,
+		] at (companydiv.west) {
+			\includegraphics[scale=0.07]{logo_bw}
 		};
 
 		\node [
 			anchor=south west, 
-			font=\fontsize{16pt}{16pt}\selectfont, 
-			yshift=15.5mm, 
+			font=\fontsize{14pt}{14pt}\selectfont, 
+			yshift=16.3mm, 
 			xshift=3mm
 		] at (sidebar.south east) {
-			Version 1.0
+			Version \@version
 		};
 	\end{tikzpicture}
 }
