@@ -70,7 +70,7 @@
 
 % Configure page margins
 \RequirePackage[includehead,includefoot]{geometry}
-\geometry{top=2cm, bottom=2cm, left=2cm,  right=2cm}
+\geometry{top=1.5cm, bottom=1.5cm, left=1.5cm,  right=1.5cm}
 
 % Datasheet version
 \gdef\@version{}
